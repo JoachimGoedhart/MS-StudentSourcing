@@ -1,37 +1,36 @@
 ---
-title: La Palma Earthquakes
+title: Studentsourcing - aggregating and re-using data from a practical cell biology course
 author:
-  - name: Steve Purves
-    orcid: 0000-0002-0760-5497
+  - name: Joachim Goedhart
+    orcid: 0000-0002-0630-3825
+    url: https://joachimgoedhart.github.io/
     corresponding: true
-    email: steve@curvenote.com
+    email: j.goedhart@uva.nl
     roles:
-      - Investigation
-      - Project administration
+      - Conceptualization
+      - Funding acquisition
+      - Writing
       - Software
       - Visualization
+      - Writing – original draft
     affiliations:
-      - Curvenote
-  - name: Rowan Cockett
-    orcid: 0000-0002-7859-8394
-    corresponding: false
-    roles: []
-    affiliations:
-      - Curvenote
+      - Molecular Cytology, SILS - University of Amsterdam, The Netherlands
+funding: "This work is supported by a Grassroots grant from the University of Amsterdam"
 keywords:
-  - La Palma
-  - Earthquakes
+  - Crowdsourcing
+  - Dashboard
+license: "CC BY-NC"
 abstract: |
-  In September 2021, a significant jump in seismic activity on the island of La Palma (Canary Islands, Spain) signaled the start of a volcanic crisis that still continues at the time of writing. Earthquake data is continually collected and published by the Instituto Geográphico Nacional (IGN). ...
+  Data that is acquired by students as part of a course is often lost. This is a pity as it is a great opportunity to collect large amounts of data. Here, we present methods to collect, aggregate and re-use data that is collect by students in a practical course on cell biology. Several use-cases are discussed that illustrate how data can be re-used eihter in teaching or scientific experimentation. A positive side-effect is that the students learn that their data is valuable.
 plain-language-summary: |
-  Earthquake data for the island of La Palma from the September 2021 eruption is found ...
+  Data acquired by students has value and in this work we present several ways to collect and re-use that data.
 key-points:
   - A web scraping script was developed to pull data from the Instituto Geogràphico Nacional into a machine-readable form for analysis
   - Earthquake events on La Palma are consistent with the presence of both mantle and crustal reservoirs.
 date: last-modified
 bibliography: references.bib
 citation:
-  container-title: Earth and Space Science
+  container-title: Life Sciences
 number-sections: true
 ---
 
@@ -101,6 +100,10 @@ La Palma is one of the west most islands in the Volcanic Archipelago of the Cana
 @fig-spatial-plot shows the location of recent Earthquakes on La Palma.
 
 ## Data & Methods {#sec-data-methods}
+
+
+H~2~O is a liquid.  2^10^ is 1024.
+
 
 ## Conclusion
 
