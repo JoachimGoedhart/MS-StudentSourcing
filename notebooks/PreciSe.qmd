@@ -16,6 +16,7 @@ First, we load the necessary R packages for data handling and plotting:
 #| echo: false
 library(tidyverse)
 library(ggbeeswarm)
+source("geom_flat_violin.R")
 ```
 
 Next, we read the data from the Google Sheet and modify the column names:
@@ -128,11 +129,10 @@ This data set will be saved, as it can be used as input for [SuperPlotsOfData](h
 df_results %>% write.csv("results_S-phase.csv")
 ```
 
-The [SuperPlotsOfData app](https://huygens.science.uva.nl/SuperPlotsOfData/) plots the data and calculates the statistics. We also do the calculations here. First we generate a dataframe that summarizes all individual measurements per independent measurement (defined by the column 'Replicate'): 
+The [SuperPlotsOfData app](https://huygens.science.uva.nl/SuperPlotsOfData/) plots the data and calculates the statistics. We can repeat the calculations and the data analysis here. First we generate a dataframe that summarizes all individual measurements per independent measurement (defined by the column 'Replicate'): 
 
 ```{r}
-df_summary <- df_results %>% group_by(Replicate) %>% summarize(n=n(), Percentage=mean(S_phase))
-df_summary$Condition <- "all"
+df_summary <- df_results %>% group_by(Replicate, Analysis) %>% summarize(n=n(), Percentage=mean(S_phase))
 df_summary
 ```
 
@@ -156,6 +156,37 @@ df_S
 
 ```
 
+Let's now generate a superplot for the individual replicates, repeating what can be done in the app with the data in `results_S-phase.csv``:
+
+```{r}
+#| label: fig-superplot
+#| fig-cap: "Data on the percentage of cells in e S-phase based on manual analysis. Each group & year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value."
+
+p <- ggplot(df_results, (aes(x=Analysis, y=S_phase, color=Replicate, fill=Replicate)))
+
+p <- p + geom_quasirandom(
+                           varwidth = TRUE, cex=2, alpha=0.8, groupOnX=TRUE)
+
+p <- p + facet_grid(.~Replicate)
+p <- p + theme_light(base_size = 12) + theme(panel.grid.minor = element_blank())
+p <- p + theme(legend.position="none")
+
+p
+```
+
+```{r}
+p <- p + geom_flat_violin(color=NA, scale = "width", width=0.7,position = position_nudge(x = .22, y = 0), trim=FALSE, alpha = 0.8)
+
+p <-  p + stat_summary(fun = mean, geom = "point", shape=21, stroke = .3, size=5, color="black", alpha=0.8)
+
+p <- p + scale_fill_viridis_d(begin=0.3, end=0.7)
+p <- p + scale_color_viridis_d(begin=0.3, end=0.7) 
+
+p
+
+```
+
+
 To visualize the individual independent values, with a unique color per year we can make a dotplot. The dotplot will be more valuable and informative when we have accumulated more data:
 
 ```{r}
@@ -165,4 +196,7 @@ df_summary %>%
   separate(Replicate, c("year","group"), sep=" ") %>%
   ggplot(aes(x=Percentage, fill=year))+geom_dotplot(dotsize = 1, stackgroups = TRUE, binwidth = 1, method = "histodot")+xlim(20,50)
 ```
+
+
+
 
