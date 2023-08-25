@@ -96,7 +96,7 @@ To get a fair estimate of the percentage of cells in the S-phase, we treat treat
 https://doi.org/10.1083/jcb.202001064). The individual measurements are shown as small dots and their median as a large dot:
 
 ```{r}
-#| label: fig-superplot
+#| label: fig-superplot-all
 #| fig-cap: "The percentage of HeLa cells in S-phase, presented as a superplot"
 p <- ggplot(df, aes(x=Group, y=S_phase, color=Group))
 p <- p + geom_quasirandom() +  stat_summary(fun = mean, geom = "point", size=6, color="black", alpha=0.5)
@@ -114,13 +114,13 @@ p
 We consider the manual analysis (nuclei counted by hand) as the ground truth. So I only select the manually processed data:
 
 ```{r}
-df_results <- df %>% filter(Analysis == 'manual')
+df_manual <- df %>% filter(Analysis == 'manual')
 ```
 
 Next, I merge the date and group data, as this will give a column that reflects independent measurements:
 
 ```{r}
-df_results <- df_results %>% unite(Replicate, c(year, Group), sep=" ")
+df_results <- df_manual %>% unite(Replicate, c(year, Group), sep=" ")
 ```
 
 This data set will be saved, as it can be used as input for [SuperPlotsOfData](https://doi.org/10.1091/mbc.E20-09-0583):
@@ -140,32 +140,28 @@ We can use these data to calculate a precise estimate of the percentage of HeLa 
 
 ```{r}
 
-df_S <- df_summary %>% ungroup() %>% summarise(n=n(),
-                                               avg = mean(Percentage),
+df_S <- df_summary %>% ungroup() %>% summarise(N=n(),
+                                               Average = mean(Percentage),
                                                sd = sd(Percentage, na.rm = TRUE)) %>%
-  mutate(sem = sd / sqrt(n - 1),
-         mean_CI_lo = avg + qt((1-0.95)/2, n - 1) * sem,
-         mean_CI_hi = avg - qt((1-0.95)/2, n - 1) * sem)
+  mutate(sem = sd / sqrt(N - 1),
+         mean_CI_lo = Average + qt((1-0.95)/2, N - 1) * sem,
+         mean_CI_hi = Average - qt((1-0.95)/2, N - 1) * sem)
 ```
 
 These are the resulting statistics:
 
 ```{r}
 
-df_S
+df_S %>% select(-c('sd', 'sem')) %>% round(1)  %>% unite(`95% CI`, c(mean_CI_lo, mean_CI_hi), sep=" - ")
 
 ```
 
-Let's now generate a superplot for the individual replicates, repeating what can be done in the app with the data in `results_S-phase.csv``:
+Let's now generate a superplot for the individual replicates, repeating what can be done in the app with the data in `results_S-phase.csv``. First we generate dotplots from the replicates:
 
 ```{r}
-#| label: fig-superplot
-#| fig-cap: "Data on the percentage of cells in e S-phase based on manual analysis. Each group & year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value."
-
 p <- ggplot(df_results, (aes(x=Analysis, y=S_phase, color=Replicate, fill=Replicate)))
 
-p <- p + geom_quasirandom(
-                           varwidth = TRUE, cex=2, alpha=0.8, groupOnX=TRUE)
+p <- p + geom_quasirandom(width = .2, varwidth = FALSE, cex=2, alpha=0.8, groupOnX=TRUE)
 
 p <- p + facet_grid(.~Replicate)
 p <- p + theme_light(base_size = 12) + theme(panel.grid.minor = element_blank())
@@ -173,14 +169,19 @@ p <- p + theme(legend.position="none")
 
 p
 ```
+We add the summary statistic for each replicate as a large dot. And with some styling (adjusting colors, labels), we generate the superplot:
 
 ```{r}
-p <- p + geom_flat_violin(color=NA, scale = "width", width=0.7,position = position_nudge(x = .22, y = 0), trim=FALSE, alpha = 0.8)
+#| label: fig-superplot
+#| fig-cap: "Data on the percentage of cells in e S-phase based on manual analysis. Each group & year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value."
+p <- p + geom_flat_violin(color=NA, scale = "width", width=0.6,position = position_nudge(x = .25, y = 0), trim=FALSE, alpha = 0.8)
 
-p <-  p + stat_summary(fun = mean, geom = "point", shape=21, stroke = .3, size=5, color="black", alpha=0.8)
+p <-  p + stat_summary(fun = mean, geom = "point", shape=21, stroke = .3, size=4, color="black", alpha=1)
 
 p <- p + scale_fill_viridis_d(begin=0.3, end=0.7)
 p <- p + scale_color_viridis_d(begin=0.3, end=0.7) 
+p <- p + labs(x="Replicate", y="S-phase [%]")
+p <- p + theme(axis.text.x = element_blank())
 
 p
 
