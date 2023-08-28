@@ -1,0 +1,88 @@
+---
+title: Summarizing the size of cells
+author: "Joachim Goedhart"
+format: html
+---
+
+```{r setup, include=FALSE}
+### Load the required packages
+library(tidyverse)
+```
+
+
+```{r include=FALSE}
+### Read the data
+
+df_sheet <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSc-nI1-s_u-XkNXEn_u2l6wkBafxJMHQ_Cd3kStrnToh7kawqjQU3y2l_1riLigKRkIqlNOqPrgkdW/pub?output=csv", na.strings = "")
+df_sheet <- df_sheet %>% na.omit()
+
+colnames(df_sheet) <- c("Timestamp", "Group", "Cell", "Nucleus")
+df_tidy <-
+    pivot_longer(
+        df_sheet,
+        cols = -c("Timestamp", "Group"),
+        names_to = "Sample",
+        values_to = "Size"
+    ) %>% mutate(Size = gsub(" ", "", Size)) %>% separate_rows(Size, sep=",")
+
+df_clean <- df_tidy %>% mutate(Size = as.numeric(Size)) %>% filter(Size>0 & Size<1000)
+
+df <- df_clean %>% separate('Timestamp', c("Date", "Time"), sep=" ") %>%
+    separate('Date', c("day", "month", "year"), sep="/", convert = TRUE)
+
+```
+
+
+``` {r}
+#| label: fig-histogram
+#| fig-cap: Distribution of the measured size of human cheek cells and their nucleus. Data from three years.
+#| warning: false
+
+ggplot(df, aes(x=Size, fill=Sample)) +
+  
+  geom_histogram(bins = 100, alpha=.8, color='grey40') +
+  # scale_x_log10() +
+  labs(y="Count", x="Size [µm]") +
+  # coord_cartesian(xlim = c(0.5,120)) +
+  theme_light(base_size = 16) + theme(axis.text.y = element_blank()) +
+  facet_wrap(~Sample) +
+  theme(legend.position = "none") +
+  
+  #Force the y-axis to start at zero
+  scale_y_continuous(expand = c(0, NA), limits = c(0,150)) +
+  #Apply a logarithmic scale to the x-axis and set the numbers for the scale
+  scale_x_log10(breaks = c(1,10,100), limits = c(.5,200)) +
+  #Remove minor gridlines
+  theme(panel.grid.minor = element_blank()) +
+  #Add ticks to the bottom, outside
+  annotation_logticks(sides="b", outside = TRUE) +
+  #Give a little more space to the log-ticks by adding margin to the top of the x-axis text
+  theme(axis.text.x = element_text(margin = margin(t=8))) +
+  #Needed to see the tcks outside the plot panel
+  coord_cartesian(clip = "off")
+        
+
+```
+
+
+```{r}
+
+
+df_cell <- df %>% filter(Sample =="Cell")
+
+
+        p <- ggplot(df_cell, aes(x=Group, y=Size, fill=Group))
+
+        p <- p + geom_violin() +  stat_summary(fun = median, geom = "point")
+        
+        p <- p + scale_y_log10()
+        
+        p <- p + labs(x="Group", y="Size [µm]")
+        p <- p + coord_cartesian(ylim = c(0.5,200))
+        
+        p <- p + theme_light(base_size = 16)
+        p <- p + theme(legend.position = "none")
+
+p
+```
+

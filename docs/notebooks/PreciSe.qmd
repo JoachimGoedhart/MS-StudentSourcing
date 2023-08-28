@@ -1,0 +1,203 @@
+---
+title: The percentage of cells in the S-phase
+author: "Joachim Goedhart"
+format: html
+---
+
+## About
+
+We summarize and display the data that is measured by students in the course "Cellulaire Oncologie". HeLa cells were incubated with EdU and subjected to click chemistry to label the cells in the S-phase. The students analyzed the images by hand and with an image analysis procedure (based on thresholding and particle analysis) in ImageJ/FIJI.
+
+The data of each student is submitted through a Google Form and collected in a Google Sheet. The students also provide information on the group that they are in, as the group is treated as an independent variable.
+
+First, we load the necessary R packages for data handling and plotting:
+
+```{r setup}
+#| echo: false
+library(tidyverse)
+library(ggbeeswarm)
+source("geom_flat_violin.R")
+```
+
+Next, we read the data from the Google Sheet and modify the column names:
+
+```{r}
+df_sheet <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQztaYnSPoe_meMwCIOxBZ7QsWgF-C3ChVM7YqWsHjkGvd51-vB442lOCC_zusWkLw-kaEJJf1bLYz6/pub?output=csv", na.strings = "")
+df_sheet <- df_sheet %>% na.omit()
+
+colnames(df_sheet) <- c("Timestamp", "Group", "manual", "automated")
+df_tidy <-
+    pivot_longer(
+        df_sheet,
+        cols = -c("Timestamp", "Group"),
+        names_to = "Analysis",
+        values_to = "S_phase"
+    ) %>% mutate(S_phase = gsub(" ", "", S_phase))
+```
+
+We do some cleaning to make sure that we have numbers only and that the values are in the appropriate range (0%-100%):
+
+```{r}
+df_clean <- df_tidy %>% mutate(S_phase = as.numeric(S_phase)) %>% filter(S_phase>0 & S_phase<100)
+```
+
+The column with Timestamp data are split, to have individual columns for the day, month and year:
+
+```{r}
+df <- df_clean %>% separate('Timestamp', c("Date", "Time"), sep=" ") %>%
+    separate('Date', c("day", "month", "year"), sep="-", convert = TRUE)
+```
+
+## Visualization
+
+We can make a first plot that shows the distribution of the values for both type of analyses. This will give some impression of an average percentage of cells that are in the S-phase:
+
+```{r}
+
+        p <- ggplot(df, aes(x=S_phase, fill=Analysis))
+
+        p <- p + geom_density(alpha=0.8, color='grey20')
+
+        p <- p + labs(y="Count", x="S-phase [%]")
+
+        p <- p + coord_cartesian(xlim = c(0,100))
+
+        p <- p + theme_light(base_size = 16) + theme(axis.text.y = element_blank())
+        p <- p + facet_wrap(~Analysis)
+        p <- p + theme(legend.position = "none")
+        
+        p
+
+```
+
+The distributions for the automated and manual analysis look similar. Since every student did the analysis by hand and in automated fashion, we can directly compare these 'paired' data and we split it for the different years:
+
+```{r}
+#| label: fig-paired-data
+#| fig-cap: "Comparing the manual and automated analysis."
+        p <- ggplot(df, aes(x=Analysis, y=S_phase))
+
+        p <- p + geom_point(alpha=0.3)  +
+          geom_line(aes(group=Time), alpha=0.3) +
+          stat_summary(fun = median, geom = "point", size=6, shape=21, fill="grey", alpha=0.9)
+        p <- p + labs(x="", y="S-phase [%]")
+
+        p <- p + coord_cartesian(ylim = c(0,100))
+
+        p <- p + theme_light(base_size = 16) 
+        p <- p + facet_wrap(~year)
+        p
+
+```
+
+Each paired measurement is connected with a line and the slopes of the line vary substantially. Still, the average value (the large grey dot) for the two different counting methods is similar for each year. There is a difference for the averages between years, and this may be true biological variation between the cell cultures.
+
+To get a fair estimate of the percentage of cells in the S-phase, we treat treat each group in each year as an independent measurement. Each of these independent measurements consists of multiple measurements (technical replicates) and we can plot this in a 'superplot' style, see also [Lord at al. (2020)](
+https://doi.org/10.1083/jcb.202001064). The individual measurements are shown as small dots and their median as a large dot:
+
+```{r}
+#| label: fig-superplot-all
+#| fig-cap: "The percentage of HeLa cells in S-phase, presented as a superplot"
+p <- ggplot(df, aes(x=Group, y=S_phase, color=Group))
+p <- p + geom_quasirandom() +  stat_summary(fun = mean, geom = "point", size=6, color="black", alpha=0.5)
+        
+p <- p + labs(x="Group", y="S-phase [%]")
+p <- p + coord_cartesian(ylim = c(0,100))
+        
+p <- p + theme_light(base_size = 16)
+p <- p + theme(legend.position = "none") + facet_grid(Analysis~year)
+
+p
+
+```
+
+We consider the manual analysis (nuclei counted by hand) as the ground truth. So I only select the manually processed data:
+
+```{r}
+df_manual <- df %>% filter(Analysis == 'manual')
+```
+
+Next, I merge the date and group data, as this will give a column that reflects independent measurements:
+
+```{r}
+df_results <- df_manual %>% unite(Replicate, c(year, Group), sep=" ")
+```
+
+This data set will be saved, as it can be used as input for [SuperPlotsOfData](https://doi.org/10.1091/mbc.E20-09-0583):
+
+```{r}
+df_results %>% write.csv("results_S-phase.csv")
+```
+
+The [SuperPlotsOfData app](https://huygens.science.uva.nl/SuperPlotsOfData/) plots the data and calculates the statistics. We can repeat the calculations and the data analysis here. First we generate a dataframe that summarizes all individual measurements per independent measurement (defined by the column 'Replicate'): 
+
+```{r}
+df_summary <- df_results %>% group_by(Replicate, Analysis) %>% summarize(n=n(), Percentage=mean(S_phase))
+df_summary
+```
+
+We can use these data to calculate a precise estimate of the percentage of HeLa cells in the S-phase:
+
+```{r}
+
+df_S <- df_summary %>% ungroup() %>% summarise(N=n(),
+                                               Average = mean(Percentage),
+                                               sd = sd(Percentage, na.rm = TRUE)) %>%
+  mutate(sem = sd / sqrt(N - 1),
+         mean_CI_lo = Average + qt((1-0.95)/2, N - 1) * sem,
+         mean_CI_hi = Average - qt((1-0.95)/2, N - 1) * sem)
+```
+
+These are the resulting statistics:
+
+```{r}
+
+df_S %>% select(-c('sd', 'sem')) %>% round(1)  %>% unite(`95% CI`, c(mean_CI_lo, mean_CI_hi), sep=" - ")
+
+```
+
+Let's now generate a superplot for the individual replicates, repeating what can be done in the app with the data in `results_S-phase.csv``. First we generate dotplots from the replicates:
+
+```{r}
+p <- ggplot(df_results, (aes(x=Analysis, y=S_phase, color=Replicate, fill=Replicate)))
+
+p <- p + geom_quasirandom(width = .2, varwidth = FALSE, cex=2, alpha=0.8, groupOnX=TRUE)
+
+p <- p + facet_grid(.~Replicate)
+p <- p + theme_light(base_size = 12) + theme(panel.grid.minor = element_blank())
+p <- p + theme(legend.position="none")
+
+p
+```
+We add the summary statistic for each replicate as a large dot. And with some styling (adjusting colors, labels), we generate the superplot:
+
+```{r}
+#| label: fig-superplot
+#| fig-cap: "Data on the percentage of cells in e S-phase based on manual analysis. Each group & year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value."
+p <- p + geom_flat_violin(color=NA, scale = "width", width=0.6,position = position_nudge(x = .25, y = 0), trim=FALSE, alpha = 0.8)
+
+p <-  p + stat_summary(fun = mean, geom = "point", shape=21, stroke = .3, size=4, color="black", alpha=1)
+
+p <- p + scale_fill_viridis_d(begin=0.3, end=0.7)
+p <- p + scale_color_viridis_d(begin=0.3, end=0.7) 
+p <- p + labs(x="Replicate", y="S-phase [%]")
+p <- p + theme(axis.text.x = element_blank())
+
+p
+
+```
+
+
+To visualize the individual independent values, with a unique color per year we can make a dotplot. The dotplot will be more valuable and informative when we have accumulated more data:
+
+```{r}
+#| label: fig-histogram
+#| fig-cap: "A distribution of the results. Each dot represents an independent observation, based on the average of a group. The dots are color-coded according to the different years."
+df_summary %>% 
+  separate(Replicate, c("year","group"), sep=" ") %>%
+  ggplot(aes(x=Percentage, fill=year))+geom_dotplot(dotsize = 1, stackgroups = TRUE, binwidth = 1, method = "histodot")+xlim(20,50)
+```
+
+
+
+
