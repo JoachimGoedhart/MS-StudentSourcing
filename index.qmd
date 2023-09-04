@@ -125,7 +125,7 @@ In conclusion, I feel it is valuable to collect data from practical courses and 
 
 ### Acknowledgments {.unnumbered}
 
-A [blog post by Garrick Aden-Buie](https://www.garrickadenbuie.com/blog/use-google-forms-and-r-to-track-data-easily/) was very helpful in the initial phase of this project. Many thanks to the people involved in Quarto, which was used to write and shape this paper. Most importantly, I'd like to thank all students involved in the course that have generously shared their data, making this a successful project.
+A [blog post by Garrick Aden-Buie](https://www.garrickadenbuie.com/blog/use-google-forms-and-r-to-track-data-easily/) was very helpful in the initial phase of this project. Many thanks to the people involved in Quarto, which was used to write and shape this paper. Most importantly, I'd like to thank all students involved in the course that have generously shared their data, making this project a success.
 
 ## References {.unnumbered}
 
