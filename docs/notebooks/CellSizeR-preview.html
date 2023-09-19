@@ -216,6 +216,7 @@
 ✖ dplyr::lag()    masks stats::lag()</code></pre>
 </div>
 </div></div>
+<p>Loading the data from the Google sheet and cleaning it:</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell" data-warning.hidden="true" data-message.hidden="true">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Read the data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -238,6 +239,7 @@
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df_clean <span class="sc">%&gt;%</span> <span class="fu">separate</span>(<span class="st">'Timestamp'</span>, <span class="fu">c</span>(<span class="st">"Date"</span>, <span class="st">"Time"</span>), <span class="at">sep=</span><span class="st">" "</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(<span class="st">'Date'</span>, <span class="fu">c</span>(<span class="st">"day"</span>, <span class="st">"month"</span>, <span class="st">"year"</span>), <span class="at">sep=</span><span class="st">"/"</span>, <span class="at">convert =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
+<p>The tidy data sheet <code>df</code> is used as an input for the plot that shows the distribution:</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-fig-histogram" class="cell" data-warning.hidden="true" data-message.hidden="true">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>Size, <span class="at">fill=</span>Sample)) <span class="sc">+</span></span>
@@ -272,11 +274,12 @@
 <div id="fig-histogram" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p class=""><img src="CellSizeR_files/figure-html/fig-histogram-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Distribution of the measured size of human cheek cells and their nucleus. Data from three years.</figcaption>
+<figcaption class="figure-caption">Distribution of the measured size of human cheek cells and their nucleus on a log scale. Data from three years.</figcaption>
 </figure>
 </div>
 </div>
 </div></div>
+<p>The size data of the Cells is selected and used to plot the distributions as a violin plot per group. The median value is indicated as a black dot:</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell" data-warning.hidden="true" data-message.hidden="true">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_cell <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Sample <span class="sc">==</span><span class="st">"Cell"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>

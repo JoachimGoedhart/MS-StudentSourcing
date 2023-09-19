@@ -421,14 +421,16 @@
 </div>
 </div></div>
 <p>To visualize the individual independent values, with a unique color per year we can make a dotplot. The dotplot will be more valuable and informative when we have accumulated more data:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-fig-histogram" class="cell" data-warning.hidden="true" data-message.hidden="true">
+<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-fig-histogram-Sphase" class="cell" data-warning.hidden="true" data-message.hidden="true">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df_summary <span class="sc">%&gt;%</span> </span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(Replicate, <span class="fu">c</span>(<span class="st">"year"</span>,<span class="st">"group"</span>), <span class="at">sep=</span><span class="st">" "</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Percentage, <span class="at">fill=</span>year))<span class="sc">+</span><span class="fu">geom_dotplot</span>(<span class="at">dotsize =</span> <span class="dv">1</span>, <span class="at">stackgroups =</span> <span class="cn">TRUE</span>, <span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">method =</span> <span class="st">"histodot"</span>)<span class="sc">+</span><span class="fu">xlim</span>(<span class="dv">20</span>,<span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Percentage, <span class="at">fill=</span>year)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dotplot</span>(<span class="at">dotsize =</span> <span class="dv">1</span>, <span class="at">stackgroups =</span> <span class="cn">TRUE</span>, <span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">method =</span> <span class="st">"histodot"</span>)<span class="sc">+</span><span class="fu">xlim</span>(<span class="dv">20</span>,<span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-histogram" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-histogram-Sphase" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p class=""><img src="PreciSe_files/figure-html/fig-histogram-1.png" class="img-fluid figure-img" width="672"></p>
+<p class=""><img src="PreciSe_files/figure-html/fig-histogram-Sphase-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption class="figure-caption">A distribution of the results. Each dot represents an independent observation, based on the average of a group. The dots are color-coded according to the different years.</figcaption>
 </figure>
 </div>

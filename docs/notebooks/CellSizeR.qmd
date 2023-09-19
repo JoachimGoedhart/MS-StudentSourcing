@@ -9,6 +9,7 @@ format: html
 library(tidyverse)
 ```
 
+Loading the data from the Google sheet and cleaning it:
 
 ```{r include=FALSE}
 ### Read the data
@@ -33,9 +34,11 @@ df <- df_clean %>% separate('Timestamp', c("Date", "Time"), sep=" ") %>%
 ```
 
 
+The tidy data sheet `df` is used as an input for the plot that shows the distribution:
+
 ``` {r}
 #| label: fig-histogram
-#| fig-cap: Distribution of the measured size of human cheek cells and their nucleus. Data from three years.
+#| fig-cap: Distribution of the measured size of human cheek cells and their nucleus on a log scale. Data from three years.
 #| warning: false
 
 ggplot(df, aes(x=Size, fill=Sample)) +
@@ -64,6 +67,7 @@ ggplot(df, aes(x=Size, fill=Sample)) +
 
 ```
 
+The size data of the Cells is selected and used to plot the distributions as a violin plot per group. The median value is indicated as a black dot:
 
 ```{r}
 

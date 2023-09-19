@@ -191,11 +191,13 @@ p
 To visualize the individual independent values, with a unique color per year we can make a dotplot. The dotplot will be more valuable and informative when we have accumulated more data:
 
 ```{r}
-#| label: fig-histogram
+#| label: fig-histogram-Sphase
 #| fig-cap: "A distribution of the results. Each dot represents an independent observation, based on the average of a group. The dots are color-coded according to the different years."
 df_summary %>% 
   separate(Replicate, c("year","group"), sep=" ") %>%
-  ggplot(aes(x=Percentage, fill=year))+geom_dotplot(dotsize = 1, stackgroups = TRUE, binwidth = 1, method = "histodot")+xlim(20,50)
+  ggplot(aes(x=Percentage, fill=year)) +
+  geom_dotplot(dotsize = 1, stackgroups = TRUE, binwidth = 1, method = "histodot")+xlim(20,50) +
+  theme_light(base_size = 16)
 ```
 
 
