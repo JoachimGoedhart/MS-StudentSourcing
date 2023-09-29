@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Joachim Goedhart">
-<meta name="dcterms.date" content="2023-09-19">
+<meta name="dcterms.date" content="2023-09-27">
 <meta name="keywords" content="Crowdsourcing, Data visualization, FAIR data, Dashboard">
 
 <title>Studentsourcing - aggregating and re-using data from a practical cell biology course</title>
@@ -69,10 +69,10 @@ The first use case demonstrates how the data can be presented as an online, inte
 ">
 <meta name="citation_keywords" content="Crowdsourcing,Data visualization,FAIR data,Dashboard">
 <meta name="citation_author" content="Joachim Goedhart">
-<meta name="citation_publication_date" content="2023-09-19">
-<meta name="citation_cover_date" content="2023-09-19">
+<meta name="citation_publication_date" content="2023-09-27">
+<meta name="citation_cover_date" content="2023-09-27">
 <meta name="citation_year" content="2023">
-<meta name="citation_online_date" content="2023-09-19">
+<meta name="citation_online_date" content="2023-09-27">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Strategies for the development of volcanic hazard maps in monogenetic volcanic fields: The example of La Palma (Canary Islands);,citation_author=José Marrero;,citation_author=Alicia García;,citation_author=Manuel Berrocoso;,citation_author=Ángeles Llinares;,citation_author=Antonio Rodríguez-Losada;,citation_author=R. Ortiz;,citation_publication_date=2019-07;,citation_cover_date=2019-07;,citation_year=2019;,citation_doi=10.1186/s13617-019-0085-5;,citation_volume=8;,citation_journal_title=Journal of Applied Volcanology;">
 <meta name="citation_reference" content="citation_title=What exactly is ‘N’ in cell culture and animal experiments?;,citation_author=Stanley E. Lazic;,citation_author=Charlie J. Clarke-Williams;,citation_author=Marcus R. Munafò;,citation_publication_date=2018-04-04;,citation_cover_date=2018-04-04;,citation_year=2018;,citation_fulltext_html_url=http://dx.doi.org/10.1371/journal.pbio.2005282;,citation_issue=4;,citation_doi=10.1371/journal.pbio.2005282;,citation_volume=16;,citation_language=en;,citation_journal_title=PLOS Biology;">
@@ -157,7 +157,7 @@ The first use case demonstrates how the data can be presented as an online, inte
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 19, 2023</p>
+      <p class="date">September 27, 2023</p>
     </div>
   </div>
   
@@ -194,7 +194,7 @@ The first use case demonstrates how the data can be presented as an online, inte
 <p><em>Sample preparation and measurements</em></p>
 <p>A buccal swab is used to harvest cheek cells by scraping ~5 times over the inside of the cheek. The tip of the sample collector is dipped into an eppendorf tube with 40 µl PBS, and the cells are transferred to an object slide by touching the slide with the tip. Next, 10 µl of 0.1% methyleneblue solution is added and the sample is enclosed by a square coverslip (22 x 22 mm). The sample is used immediately to observe the cells with a Leica microscope, equipped with a Lumenera camera. A 20x or 40x objective is used to observe and image the cells. A separate image of a micrometer (<a href="https://www.fishersci.com/shop/products/stage-graticules-s8/5028481">Electron Microscopy Sciences 6804208, Stage Micrometer S8, Horizontal Scale, 1 mm Length</a>) is acquired at the same magnification. The images are processed in ImageJ/FIJI and the dimensions of the images are calibrated with the micrometer image (<a href="#fig-students-side" class="quarto-xref">Figure&nbsp;1</a>). The line tool is used to measure the diameter of the cells (the longest axis).</p>
 <p><em>Data collection</em></p>
-<p>The data of the measurements is collected through a Google Form, an example of which is shown in <a href="#fig-students-side" class="quarto-xref">Figure&nbsp;1</a>. The data that is recorded by the form is the group (A/B/C/D), the size measurements of the cheek cells and the size measurements of the nucleus. The data is aggregated in a Google Sheet which has four columns with data on Timestamp, Group, size of cells, size of nuclei. When correctly uploaded, the two columns with the size data have comma separated values of 10 measurements.</p>
+<p>The data of the measurements is collected through a Google Form, an example of which is shown in <a href="#fig-students-side" class="quarto-xref">Figure&nbsp;1</a>. By submitting the form, the students give permission for the anonymous use of the data. The data that is recorded by the form is the group (A/B/C/D), the size measurements of the cheek cells and the size measurements of the nucleus. The data is aggregated in a Google Sheet which has four columns with data on Timestamp, Group, size of cells, size of nuclei. When correctly uploaded, the two columns with the size data have comma separated values of 10 measurements.</p>
 <div id="fig-students-side" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="images/Students-side.png" class="img-fluid figure-img"></p>
@@ -211,7 +211,7 @@ The first use case demonstrates how the data can be presented as an online, inte
 <p><em>Sample preparation and measurements</em></p>
 <p>HeLa cells are cultured according to standard procedures and seeded 1 or 2 days before the treatment on 12 mm diameter glass coverslips. HeLa cells are incubated with 10 µM EdU for 30 minutes at 37 ˚C. The cells are fixed with 4% formaldehyde in PBS and permeabilised with 0.1% Triton X-100 in PBS. Click chemistry is performed with 9 µM Cy3-azide and 2 mM CuSO<sub>4</sub>. To start the reaction, 20 mg/ml ascorbate (final concentration) is added and the solution is used immediately to stain the cells. After 30 minutes, the cells are washed 3x with PBS and the sample is incubated with 0.1 µg/ml DAPI for 5 minutes. Samples are mounted in Mowiol and used for observation with fluorescence microscopy. Images of at least 100 cells are acquired with the DAPI and TRITC filters sets. The nuclei in both channels are counted by hand, or in an automated way by segmentation and ‘particle analysis’ in imageJ to calculate the percentage of cells that are positive for Cy3 fluorescence, reflecting cells in the S-phase.</p>
 <p><em>Data collection</em></p>
-<p>The data of the measurements is collected on voluntary basis through a Google Form. The data that is recorded is the group (A/B/C/D), the percentage of cells in the S-phase for two methods, i.e.&nbsp;manual and using ImageJ/FIJI. The form is easy to set up and the data is collected in Google Sheets, yielding four columns; Timestamp, Group, and two columns with percentages of S-phase determined by the two methods.</p>
+<p>The data of the measurements is collected through a Google Form. By submitting the form, the students give permission for the anonymous use of the data. The data that is recorded is the group (A/B/C/D), the percentage of cells in the S-phase for two methods, i.e.&nbsp;manual and using ImageJ/FIJI. The form is easy to set up and the data is collected in Google Sheets, yielding four columns; Timestamp, Group, and two columns with percentages of S-phase determined by the two methods.</p>
 <p><em>Data processing &amp; visualization</em></p>
 <p>The data that is in the Google Sheet can be downloaded and read into R <span class="citation" data-cites="RCore">(<a href="#ref-RCore" role="doc-biblioref">R Core Team 2022</a>)</span> as a CSV. All subsequent processing and data visualization is done with R and quarto. The cleaning of the data consists of removing empty cells, changing the column names, conversion to a tidy format, forcing the data into a ‘numeric’ type and filtering for sensible values (anything outside the generous range of 0-100 will be removed).</p>
 </section>
