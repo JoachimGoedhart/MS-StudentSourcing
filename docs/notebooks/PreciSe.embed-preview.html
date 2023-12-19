@@ -208,7 +208,7 @@
 <p>We summarize and display the data that is measured by students in the course “Cellulaire Oncologie”. HeLa cells were incubated with EdU and subjected to click chemistry to label the cells in the S-phase. The students analyzed the images by hand and with an image analysis procedure (based on thresholding and particle analysis) in ImageJ/FIJI.</p>
 <p>The data of each student is submitted through a Google Form and collected in a Google Sheet. The students also provide information on the group that they are in, as the group is treated as an independent variable.</p>
 <p>First, we load the necessary R packages for data handling and plotting:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="287292ba-4aa9-4c81-9b81-a6d9f6588130" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="55cc2f98-7bf7-41d4-a0a3-452a1930e8e9" class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
@@ -222,7 +222,7 @@
 </div>
 </div></div>
 <p>Next, we read the data from the Google Sheet and modify the column names:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="df963f32-8c41-4a6c-bb48-e832cb5979df" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="f4027f8b-47e8-4857-a5b4-7d212d6f73f8" class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_sheet <span class="op">&lt;-</span> read.csv(<span class="st">"https://docs.google.com/spreadsheets/d/e/2PACX-1vQztaYnSPoe_meMwCIOxBZ7QsWgF-C3ChVM7YqWsHjkGvd51-vB442lOCC_zusWkLw-kaEJJf1bLYz6/pub?output=csv"</span>, na.strings <span class="op">=</span> <span class="st">""</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_sheet <span class="op">&lt;-</span> df_sheet <span class="op">%&gt;%</span> na.omit()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -236,14 +236,14 @@
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">%&gt;%</span> mutate(S_phase <span class="op">=</span> gsub(<span class="st">" "</span>, <span class="st">""</span>, S_phase))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <p>We do some cleaning to make sure that we have numbers only and that the values are in the appropriate range (0%-100%):</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="9179a6cc-efdd-4bdb-989a-052f0819a9c9" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="948e01af-ee7a-446a-a7c8-ca6d0967db1d" class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">&lt;-</span> df_tidy <span class="op">%&gt;%</span> mutate(S_phase <span class="op">=</span> <span class="im">as</span>.numeric(S_phase)) <span class="op">%&gt;%</span> <span class="bu">filter</span>(S_phase<span class="op">&gt;</span><span class="dv">0</span> <span class="op">&amp;</span> S_phase<span class="op">&lt;</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
 </div>
 </div></div>
 <p>The column with Timestamp data are split, to have individual columns for the day, month and year:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="bb7c4190-c0c3-40e3-80e8-f5f85820f241" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="f992430f-1956-40e9-908b-68ecb29d9c62" class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">&lt;-</span> df_clean <span class="op">%&gt;%</span> separate(<span class="st">'Timestamp'</span>, c(<span class="st">"Date"</span>, <span class="st">"Time"</span>), sep<span class="op">=</span><span class="st">" "</span>) <span class="op">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    separate(<span class="st">'Date'</span>, c(<span class="st">"day"</span>, <span class="st">"month"</span>, <span class="st">"year"</span>), sep<span class="op">=</span><span class="st">"-"</span>, convert <span class="op">=</span> TRUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
@@ -251,7 +251,7 @@
 <section id="visualization" class="level2">
 <h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
 <p>We can make a first plot that shows the distribution of the values for both type of analyses. This will give some impression of an average percentage of cells that are in the S-phase:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="b7d7b530-855e-4ee6-ba25-331a6440110b" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="15ff04c0-a141-4078-91cf-fd2476a0f783" class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> ggplot(df, aes(x<span class="op">=</span>S_phase, fill<span class="op">=</span>Analysis))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> geom_density(alpha<span class="op">=</span><span class="fl">0.8</span>, color<span class="op">=</span><span class="st">'grey20'</span>)</span>
@@ -273,21 +273,23 @@
 <div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-paired-data" class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> ggplot(df, aes(x<span class="op">=</span>Analysis, y<span class="op">=</span>S_phase))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> geom_point(alpha<span class="op">=</span><span class="fl">0.3</span>)  <span class="op">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>          geom_line(aes(group<span class="op">=</span>Time), alpha<span class="op">=</span><span class="fl">0.3</span>) <span class="op">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>          stat_summary(fun <span class="op">=</span> median, geom <span class="op">=</span> <span class="st">"point"</span>, size<span class="op">=</span><span class="dv">6</span>, shape<span class="op">=</span><span class="dv">21</span>, fill<span class="op">=</span><span class="st">"grey"</span>, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">"S-phase [%]"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> geom_point(alpha<span class="op">=</span><span class="fl">0.2</span>)  <span class="op">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>          geom_line(aes(group<span class="op">=</span>Time), alpha<span class="op">=</span><span class="fl">0.2</span>) <span class="op">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>          stat_summary(fun <span class="op">=</span> median, geom <span class="op">=</span> <span class="st">"line"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, group<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>          stat_summary(fun <span class="op">=</span> median, geom <span class="op">=</span> <span class="st">"point"</span>, size<span class="op">=</span><span class="dv">6</span>, shape<span class="op">=</span><span class="dv">21</span>, fill<span class="op">=</span><span class="st">"grey20"</span>, alpha<span class="op">=</span><span class="fl">0.9</span>)</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> coord_cartesian(ylim <span class="op">=</span> c(<span class="dv">0</span>,<span class="dv">100</span>))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">"S-phase [%]"</span>)</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> theme_light(base_size <span class="op">=</span> <span class="dv">16</span>) </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> facet_wrap(<span class="op">~</span>year)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> coord_cartesian(ylim <span class="op">=</span> c(<span class="dv">0</span>,<span class="dv">100</span>))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> theme_light(base_size <span class="op">=</span> <span class="dv">16</span>) </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> p <span class="op">+</span> facet_wrap(<span class="op">~</span>year)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-paired-data" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p class=""><img src="PreciSe.embed_files/figure-html/fig-paired-data-output-1.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Comparing the manual and automated analysis.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;1: Qunatification of the percentage of HeLa cells in the S-phase by EdU incorpotation and fluorescence staining. The data from three different years is shown and a comparison is made between a manual counting method and an automated analysis in ImageJ. The large dot shows the median value, which is comaprable between analysis methods.</figcaption>
 </figure>
 </div>
 </div>
@@ -315,19 +317,19 @@
 </div>
 </div></div>
 <p>We consider the manual analysis (nuclei counted by hand) as the ground truth. So I only select the manually processed data:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="5e8a00d4-cb00-40b8-89b6-ab368cc50b1b" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="df792723-55a4-41a9-b0c1-298ff06cc87f" class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_manual <span class="op">&lt;-</span> df <span class="op">%&gt;%</span> <span class="bu">filter</span>(Analysis <span class="op">==</span> <span class="st">'manual'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <p>Next, I merge the date and group data, as this will give a column that reflects independent measurements:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cc0749fe-265c-468c-b22c-c849b0db6b46" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="ab7ae293-2ac4-4df2-a93d-753268df9cc7" class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_results <span class="op">&lt;-</span> df_manual <span class="op">%&gt;%</span> unite(Replicate, c(year, Group), sep<span class="op">=</span><span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <p>This data set will be saved, as it can be used as input for <a href="https://doi.org/10.1091/mbc.E20-09-0583">SuperPlotsOfData</a>:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="ccd6893d-6464-41af-b1c7-a6c579e92b3b" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="d99918b1-8eb8-47e6-94aa-ddea0db4f008" class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df_results <span class="op">%&gt;%</span> write.csv(<span class="st">"results_S-phase.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <p>The <a href="https://huygens.science.uva.nl/SuperPlotsOfData/">SuperPlotsOfData app</a> plots the data and calculates the statistics. We can repeat the calculations and the data analysis here. First we generate a dataframe that summarizes all individual measurements per independent measurement (defined by the column ‘Replicate’):</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="5582c6a3-a117-46bb-8d9a-5c505e21c77a" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="64c7a309-32e1-4e9c-b0b9-a22a3d4f767c" class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_summary <span class="op">&lt;-</span> df_results <span class="op">%&gt;%</span> group_by(Replicate, Analysis) <span class="op">%&gt;%</span> summarize(n<span class="op">=</span>n(), Percentage<span class="op">=</span>mean(S_phase))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'Replicate'. You can override using the
@@ -353,7 +355,7 @@
 </div>
 </div></div>
 <p>We can use these data to calculate a precise estimate of the percentage of HeLa cells in the S-phase:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="0892e144-04e9-40a0-bfdd-3f7b3fc9a370" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="5efc93a2-dc6a-45a3-ae4d-074a4f46f31b" class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_S <span class="op">&lt;-</span> df_summary <span class="op">%&gt;%</span> ungroup() <span class="op">%&gt;%</span> summarise(N<span class="op">=</span>n(),</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                                               Average <span class="op">=</span> mean(Percentage),</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                                               sd <span class="op">=</span> sd(Percentage, na.rm <span class="op">=</span> TRUE)) <span class="op">%&gt;%</span></span>
@@ -362,7 +364,7 @@
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>         mean_CI_hi <span class="op">=</span> Average <span class="op">-</span> qt((<span class="dv">1</span><span class="op">-</span><span class="fl">0.95</span>)<span class="op">/</span><span class="dv">2</span>, N <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> sem)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <p>These are the resulting statistics:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="b583510b-d6b9-4a8b-80d0-e73c5ea06a28" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="c61b5d96-5168-42df-a0c6-60f9c88a3979" class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_S <span class="op">%&gt;%</span> select(<span class="op">-</span>c(<span class="st">'sd'</span>, <span class="st">'sem'</span>)) <span class="op">%&gt;%</span> <span class="bu">round</span>(<span class="dv">1</span>)  <span class="op">%&gt;%</span> unite(`<span class="dv">95</span><span class="op">%</span> CI`, c(mean_CI_lo, mean_CI_hi), sep<span class="op">=</span><span class="st">" - "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
@@ -372,7 +374,7 @@
 </div>
 </div></div>
 <p>Let’s now generate a superplot for the individual replicates, repeating what can be done in the app with the data in `results_S-phase.csv``. First we generate dotplots from the replicates:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="4f930864-a5b9-48c9-be40-06bac21ffdec" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="f00f83c3-9000-4797-80a8-f0c1e7910eb7" class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">&lt;-</span> ggplot(df_results, (aes(x<span class="op">=</span>Analysis, y<span class="op">=</span>S_phase, color<span class="op">=</span>Replicate, fill<span class="op">=</span>Replicate)))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">&lt;-</span> p <span class="op">+</span> geom_quasirandom(width <span class="op">=</span> <span class="fl">.2</span>, varwidth <span class="op">=</span> FALSE, cex<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, groupOnX<span class="op">=</span>TRUE)</span>
@@ -406,7 +408,7 @@
 <div id="fig-superplot" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p class=""><img src="PreciSe.embed_files/figure-html/fig-superplot-output-2.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Data on the percentage of cells in e S-phase based on manual analysis. Each group &amp; year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3: Data on the percentage of cells in the S-phase based on manual analysis. Each group and year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value.</figcaption>
 </figure>
 </div>
 </div>

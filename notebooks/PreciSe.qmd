@@ -74,12 +74,14 @@ The distributions for the automated and manual analysis look similar. Since ever
 
 ```{r}
 #| label: fig-paired-data
-#| fig-cap: "Comparing the manual and automated analysis."
+#| fig-cap: "Qunatification of the percentage of HeLa cells in the S-phase by EdU incorpotation and fluorescence staining. The data from three different years is shown and a comparison is made between a manual counting method and an automated analysis in ImageJ. The large dot shows the median value, which is comaprable between analysis methods."
         p <- ggplot(df, aes(x=Analysis, y=S_phase))
 
-        p <- p + geom_point(alpha=0.3)  +
-          geom_line(aes(group=Time), alpha=0.3) +
-          stat_summary(fun = median, geom = "point", size=6, shape=21, fill="grey", alpha=0.9)
+        p <- p + geom_point(alpha=0.2)  +
+          geom_line(aes(group=Time), alpha=0.2) +
+          stat_summary(fun = median, geom = "line", linewidth=2, group=1) +
+          stat_summary(fun = median, geom = "point", size=6, shape=21, fill="grey20", alpha=0.9)
+
         p <- p + labs(x="", y="S-phase [%]")
 
         p <- p + coord_cartesian(ylim = c(0,100))
@@ -173,7 +175,7 @@ We add the summary statistic for each replicate as a large dot. And with some st
 
 ```{r}
 #| label: fig-superplot
-#| fig-cap: "Data on the percentage of cells in e S-phase based on manual analysis. Each group & year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value."
+#| fig-cap: "Data on the percentage of cells in the S-phase based on manual analysis. Each group and year defines an independent observations and is shown as dotplot and the distribution. The larger dot reflects the median value."
 p <- p + geom_flat_violin(color=NA, scale = "width", width=0.6,position = position_nudge(x = .25, y = 0), trim=FALSE, alpha = 0.8)
 
 p <-  p + stat_summary(fun = mean, geom = "point", shape=21, stroke = .3, size=4, color="black", alpha=1)

@@ -38,7 +38,7 @@ The tidy data sheet `df` is used as an input for the plot that shows the distrib
 
 ``` {r}
 #| label: fig-histogram
-#| fig-cap: Distribution of the measured size of human cheek cells and their nucleus on a log scale. Data from three years.
+#| fig-cap: Distribution of the measured size of human cheek cells and their nucleus on a log scale. Aggregated data from three consecutive years (2021-2023).
 #| warning: false
 
 ggplot(df, aes(x=Size, fill=Sample)) +

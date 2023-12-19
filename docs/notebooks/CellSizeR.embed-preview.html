@@ -225,13 +225,13 @@
 <div id="fig-histogram" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p class=""><img src="CellSizeR.embed_files/figure-html/fig-histogram-output-1.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Distribution of the measured size of human cheek cells and their nucleus on a log scale. Data from three years.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;1: Distribution of the measured size of human cheek cells and their nucleus on a log scale. Aggregated data from three consecutive years (2021-2023).</figcaption>
 </figure>
 </div>
 </div>
 </div></div>
 <p>The size data of the Cells is selected and used to plot the distributions as a violin plot per group. The median value is indicated as a black dot:</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="b6fc08b7-e994-4554-bd2c-79428c771183" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="e45e4923-fe87-480f-84f9-c7c888984297" class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_cell <span class="op">&lt;-</span> df <span class="op">%&gt;%</span> <span class="bu">filter</span>(Sample <span class="op">==</span><span class="st">"Cell"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        p <span class="op">&lt;-</span> ggplot(df_cell, aes(x<span class="op">=</span>Group, y<span class="op">=</span>Size, fill<span class="op">=</span>Group))</span>
